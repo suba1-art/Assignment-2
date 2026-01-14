@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Registration</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        padding: 20px;
+    }
+    .box {
+        background: white;
+        padding: 30px;
+        max-width: 400px;
+        margin: auto;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+    }
+    button {
+        background: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #0056b3;
+    }
+    .hidden {
+        display: none;
+    }
+    .error {
+        color: red;
+    }
+    .success {
+        color: green;
+    }
+</style>
+</head>
+<body>
+
+<!-- REGISTRATION -->
+<div class="box" id="registerBox">
+    <h2>Registration Form</h2>
+    <form onsubmit="register(event)">
+        <input id="fname" placeholder="First Name">
+        <input id="sname" placeholder="Second Name">
+        <input id="age" type="number" placeholder="Age">
+        <input id="username" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+        <button type="submit">Submit</button>
+    </form>
+    <p id="regMsg"></p>
+</div>
+
+<!-- COURSE SELECTION -->
+<div class="box hidden" id="courseBox">
+    <h2>Select 3 Courses</h2>
+    <label><input type="checkbox" value="HTML"> HTML</label><br>
+    <label><input type="checkbox" value="CSS"> CSS</label><br>
+    <label><input type="checkbox" value="JavaScript"> JavaScript</label><br>
+    <label><input type="checkbox" value="Python"> Python</label><br>
+    <label><input type="checkbox" value="Java"> Java</label><br>
+    <button onclick="saveCourses()">Register</button>
+    <p id="courseMsg"></p>
+</div>
+
+<!-- LOGIN -->
+<div class="box hidden" id="loginBox">
+    <h2>Login</h2>
+    <form onsubmit="login(event)">
+        <input id="loginUser" placeholder="Username">
+        <input id="loginPass" type="password" placeholder="Password">
+        <button type="submit">Login</button>
+    </form>
+    <p id="loginMsg"></p>
+</div>
+
+<!-- STATUS -->
+<div class="box hidden" id="statusBox">
+    <h2>Registration Status</h2>
+    <p class="success">Login Successful!</p>
+    <p><b>Selected Courses:</b></p>
+    <ul id="courseList"></ul>
+</div>
+
+<script>
+    let savedUser = {};
+    let selectedCourses = [];
+
+    function register(event) {
+    event.preventDefault(); // important: stops page reload
+
+    savedUser = {
+        fname: fname.value,
+        sname: sname.value,
+        age: age.value,
+        username: username.value,
+        password: password.value
+    };
+
+    if (!savedUser.username || !savedUser.password) {
+        regMsg.innerHTML = "<span class='error'>All fields required</span>";
+        return;
+    }
+
+    registerBox.classList.add("hidden");
+    courseBox.classList.remove("hidden");
+}
+
+
+    function saveCourses() {
+        selectedCourses = [];
+        document.querySelectorAll("input[type=checkbox]:checked")
+            .forEach(c => selectedCourses.push(c.value));
+
+        if (selectedCourses.length !== 3) {
+            courseMsg.innerHTML = "<span class='error'>Select exactly 3 courses</span>";
+            return;
+        }
+
+        courseBox.classList.add("hidden");
+        loginBox.classList.remove("hidden");
+    }
+
+   function login(event) {
+    event.preventDefault(); // stops refresh
+
+    if (loginUser.value !== savedUser.username) {
+        loginMsg.innerHTML = "<span class='error'>Wrong username</span>";
+        return;
+    }
+
+    if (loginPass.value !== savedUser.password) {
+        loginMsg.innerHTML = "<span class='error'>Wrong password</span>";
+        return;
+    }
+
+    // Success
+    loginBox.classList.add("hidden");
+    statusBox.classList.remove("hidden");
+
+    courseList.innerHTML = "";
+    selectedCourses.forEach(c => {
+        courseList.innerHTML += "<li>" + c + "</li>";
+    });
+}
+</script>
+
+</body>
+</html>
